@@ -1,7 +1,7 @@
 const canvas = document.querySelector('#orb');
 const ctx = canvas.getContext('2d');
 let w, h, dpr, t = 0, spin = -0.45, lift = 0, dragging = false, lastX = 0;
-let interaction = null, petStrokes = 0, happyUntil = 0, painUntil = 0;
+let interaction = null, petStrokes = 0, happyUntil = 0, painUntil = 0, pointerX = innerWidth*.68, pointerY = innerHeight*.38;
 const ears = [{ stretch:0, bend:0 }, { stretch:0, bend:0 }];
 const dots = [];
 
@@ -10,7 +10,7 @@ for (let i = 0; i < 900; i++) {
   const u = i / 899, phi = Math.acos(1 - 2 * u), theta = Math.PI * (1 + Math.sqrt(5)) * i;
   dots.push({ x:Math.cos(theta)*Math.sin(phi), y:Math.sin(theta)*Math.sin(phi), z:Math.cos(phi), size:.35 + Math.random()*1.6, seed:Math.random()*10 });
 }
-function resize() { dpr = Math.min(devicePixelRatio, 2); w = innerWidth; h = innerHeight; canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
+function resize() { dpr = Math.min(devicePixelRatio, 2); w = innerWidth; h = innerHeight; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
 addEventListener('resize', resize); resize();
 function geometry() {
   const compact = w < 650, r = Math.min(w,h)*(compact ? .285 : .31);
@@ -37,8 +37,10 @@ function frame(ms) {
   for (const p of sorted) { const scale=.72+p.z*.28, x=p.x*r*scale, y=p.y*r*scale; const light=Math.max(0, p.z*.55 - p.y*.2 + .42); ctx.fillStyle=`rgba(255,${Math.round(75+150*light)},${Math.round(32+100*light)},${.22+light*.65})`; ctx.beginPath(); ctx.arc(x,y,p.size*(.5+scale),0,7); ctx.fill(); }
   const earSize = r*.28*1.2;
   drawEar(-r*.48,-r*.86,earSize,-.32,ears[0]); drawEar(r*.48,-r*.86,earSize,.32,ears[1]);
-  const happy = t < happyUntil, hurt = t < painUntil, face=.72+ca*.2; { ctx.globalAlpha=face; ctx.fillStyle='#261514';
-    [-.3,.3].forEach(x=>{ctx.beginPath(); if(happy){ctx.arc(x*r,-.06*r,r*.055,Math.PI,0);ctx.lineWidth=2;ctx.strokeStyle='#261514';ctx.stroke();}else if(hurt){ctx.moveTo((x-.065)*r,-.11*r);ctx.lineTo((x+.065)*r,.01*r);ctx.moveTo((x+.065)*r,-.11*r);ctx.lineTo((x-.065)*r,.01*r);ctx.lineWidth=2.4;ctx.strokeStyle='#261514';ctx.stroke();}else{ctx.ellipse(x*r,-.06*r,r*.055,r*.085,0,0,7);ctx.fill();}});
+  const happy = t < happyUntil, hurt = t < painUntil, face=.72+ca*.2;
+  const lookX = Math.max(-1, Math.min(1, (pointerX-cx)/(r*1.2))), lookY = Math.max(-1, Math.min(1, (pointerY-cy)/(r*1.2)));
+  { ctx.globalAlpha=face; ctx.fillStyle='#261514';
+    [-.3,.3].forEach(x=>{ctx.beginPath(); if(happy){ctx.arc(x*r,-.06*r,r*.055,Math.PI,0);ctx.lineWidth=2;ctx.strokeStyle='#261514';ctx.stroke();}else if(hurt){ctx.moveTo((x-.065)*r,-.11*r);ctx.lineTo((x+.065)*r,.01*r);ctx.moveTo((x+.065)*r,-.11*r);ctx.lineTo((x-.065)*r,.01*r);ctx.lineWidth=2.4;ctx.strokeStyle='#261514';ctx.stroke();}else{ctx.fillStyle='#fff0c7';ctx.ellipse(x*r,-.06*r,r*.075,r*.09,0,0,7);ctx.fill();ctx.fillStyle='#261514';ctx.beginPath();ctx.ellipse((x+lookX*.035)*r,(-.06+lookY*.035)*r,r*.035,r*.05,0,0,7);ctx.fill();}});
     ctx.fillStyle='#fff0c7'; ctx.beginPath();ctx.moveTo(0,.1*r);ctx.lineTo(-.045*r,.055*r);ctx.lineTo(.045*r,.055*r);ctx.closePath();ctx.fill(); ctx.strokeStyle='#3f1b17';ctx.lineWidth=1.2;
     if(happy&&!hurt){ctx.beginPath();ctx.arc(0,.07*r,.1*r,0,Math.PI);ctx.stroke();}
     [-1,1].forEach(side=>{for(let q=-.05;q<.12;q+=.08){ctx.beginPath();ctx.moveTo(side*.06*r,.11*r);ctx.lineTo(side*.62*r,(q+.08)*r);ctx.stroke();}})
@@ -53,7 +55,7 @@ function hitTest(x, y) {
   return null;
 }
 canvas.addEventListener('pointerdown', e=>{ interaction=hitTest(e.clientX,e.clientY); dragging=true; lastX=e.clientX; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener('pointermove', e=>{ if(!dragging)return; const dx=e.clientX-lastX, dy=e.clientY-(interaction?.lastY ?? e.clientY); lastX=e.clientX;
+canvas.addEventListener('pointermove', e=>{ pointerX=e.clientX; pointerY=e.clientY; if(!dragging)return; const dx=e.clientX-lastX, dy=e.clientY-(interaction?.lastY ?? e.clientY); lastX=e.clientX;
   if(interaction?.type==='ear'){ const ear=ears[interaction.index]; ear.stretch=Math.max(-.35,Math.min(.7,ear.stretch-dy*.008)); ear.bend=Math.max(-.7,Math.min(.7,ear.bend-dx*.012)); if(Math.abs(ear.stretch)>.38||Math.abs(ear.bend)>.45) painUntil=t+.65; interaction.lastY=e.clientY; }
   else if(interaction?.type==='pet'){ interaction.distance+=Math.hypot(dx,dy); spin+=dx*.004; }
   else spin+=dx*.012;
