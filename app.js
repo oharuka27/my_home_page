@@ -10,7 +10,7 @@ for (let i = 0; i < 900; i++) {
   const u = i / 899, phi = Math.acos(1 - 2 * u), theta = Math.PI * (1 + Math.sqrt(5)) * i;
   dots.push({ x:Math.cos(theta)*Math.sin(phi), y:Math.sin(theta)*Math.sin(phi), z:Math.cos(phi), size:.35 + Math.random()*1.6, seed:Math.random()*10 });
 }
-function resize() { dpr = Math.min(devicePixelRatio, 2); w = innerWidth; h = innerHeight; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
+function resize() { const rect=canvas.getBoundingClientRect(); dpr = Math.min(devicePixelRatio, 2); w = rect.width; h = rect.height; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
 addEventListener('resize', resize); resize();
 function geometry() {
   const compact = w < 650, r = Math.min(w,h)*(compact ? .285 : .31);
@@ -57,9 +57,9 @@ function hitTest(x, y) {
   if(localY > -r*1.35 && localY < -r*.64 && Math.abs(localX-r*.48)<r*.4) return {type:'ear', index:1};
   return null;
 }
-canvas.addEventListener('pointerdown', e=>{ interaction=hitTest(e.clientX,e.clientY); dragging=true; lastX=e.clientX; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener('pointermove', e=>{ pointerX=e.clientX; pointerY=e.clientY; if(!dragging)return; const dx=e.clientX-lastX, dy=e.clientY-(interaction?.lastY ?? e.clientY); lastX=e.clientX;
-  if(interaction?.type==='ear'){ const ear=ears[interaction.index]; ear.stretch=Math.max(-.35,Math.min(.7,ear.stretch-dy*.008)); ear.bend=Math.max(-.7,Math.min(.7,ear.bend-dx*.012)); if(Math.abs(ear.stretch)>.38||Math.abs(ear.bend)>.45) painUntil=t+.65; interaction.lastY=e.clientY; }
+canvas.addEventListener('pointerdown', e=>{ const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; interaction=hitTest(x,y); dragging=true; lastX=x; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', e=>{ const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; pointerX=x; pointerY=y; if(!dragging)return; const dx=x-lastX, dy=y-(interaction?.lastY ?? y); lastX=x;
+  if(interaction?.type==='ear'){ const ear=ears[interaction.index]; ear.stretch=Math.max(-.35,Math.min(.7,ear.stretch-dy*.008)); ear.bend=Math.max(-.7,Math.min(.7,ear.bend-dx*.012)); if(Math.abs(ear.stretch)>.38||Math.abs(ear.bend)>.45) painUntil=t+.65; interaction.lastY=y; }
   else if(interaction?.type==='pet'){ interaction.distance+=Math.hypot(dx,dy); spin+=dx*.004; }
   else spin+=dx*.012;
 });

@@ -1,31 +1,77 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CATALYST — interactive cat orb</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main>
-      <canvas id="orb" aria-label="動かせる猫の球体"></canvas>
-      <div class="grain" aria-hidden="true"></div>
-      <header>
-        <a class="brand" href="#top">CATALYST<span>®</span></a>
-        <p>AN EXPERIMENT IN MOTION</p>
-      </header>
-      <section class="intro" id="top">
-        <p class="eyebrow">01 / FELINE FORM</p>
-        <h1>MADE OF<br><em>STARDUST.</em></h1>
-        <p class="copy">粒子と光で編んだ、少し不思議な猫のかたち。<br>ドラッグして、表情の変化を見つけてください。</p>
-      </section>
-      <aside class="controls">
-        <span>DRAG TO ROTATE</span>
-        <span class="line"></span>
-        <span>◌</span>
-      </aside>
-      <footer><span>© 2026 CATALYST</span><span>WEBGL-FREE / CANVAS</span></footer>
-    </main>
-    <script src="app.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ソフトウェアエンジニアのスキルシートとポートフォリオ">
+  <title>HARUKA OHARA — Portfolio</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="#top" aria-label="トップへ戻る">H/O<span>®</span></a></header>
+  <main>
+    <section class="hero" id="top">
+      <canvas id="orb" aria-label="ドラッグして動かせる猫のオブジェクト"></canvas><div class="grain" aria-hidden="true"></div>
+      <div class="hero-copy"><p class="eyebrow">SOFTWARE ENGINEER / PORTFOLIO</p><h1>BUILDING<br><em>WITH CARE.</em></h1><p class="lead">使う人のことを考え、丁寧につくる。<br>Webからデスクトップまで、好奇心をかたちにしています。</p><nav class="hero-nav" aria-label="メインナビゲーション"><a href="#skills">SKILLS</a><a href="#profile">PROFILE</a><a href="#portfolio">PLAYGROUND</a><a href="#history">HISTORY</a></nav></div>
+      <p class="interaction-hint" aria-hidden="true">DRAG THE CAT <span></span> ◌</p><a class="scroll-cue" href="#skills">SCROLL <span>↓</span></a>
+    </section>
+    <section class="section skills" id="skills">
+      <div class="section-heading"><p class="section-number">01</p><div><p class="eyebrow">SKILL SHEET</p><h2>SKILLS</h2></div></div>
+      <div class="skill-table-wrap" tabindex="0" aria-label="スキル一覧テーブル。横方向にスクロールできます">
+        <table class="skill-table">
+          <thead><tr><th scope="col">区分</th><th scope="col">内容</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">OS</th><td>Windows、Linux（Ubuntu）、macOS、iOS</td></tr>
+            <tr><th scope="row">言語</th><td>C++、Python、TypeScript、Swift</td></tr>
+            <tr><th scope="row">DB</th><td>PostgreSQL、D1（Cloudflare）</td></tr>
+            <tr><th scope="row">ツール／その他</th><td>VS Code、PyCharm、Qt Creator、Visual Studio、React、Django（Python）<br>WSL、Docker、Git、SVN、GitHub、GitLab、AWS、Cloudflare、Jira（Atlassian）、CI/CD構築<br>GitHub Copilot、Codex</td></tr>
+            <tr><th scope="row">保有資格</th><td>博士号（理学）<small>※筑波大学 数理物質科学研究科 物理学専攻 博士後期課程卒</small><br>基本情報技術者試験<br>Python 3 エンジニア認定試験<br>TOEIC 640</td></tr>
+            <tr><th scope="row">工程経験</th><td>調査分析：★／要件定義：○／基本設計：★／詳細設計：★／実装：★／単体試験：★／結合試験：○／運用保守：○／PL・PM：○<small class="experience-note">※★：10年以上　●：5年以上　◎：3年以上　○：3年未満</small></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="section profile" id="profile">
+      <div class="section-heading"><p class="section-number">02</p><div><p class="eyebrow">SELF INTRODUCTION</p><h2>PROFILE</h2></div></div>
+      <div class="profile-content">
+        <div class="profile-body">
+          <p>博士（理学）を取得しています。数学・物理の知識を直接的に生かしたモデリング技術やアルゴリズム利用技術だけでなく、その過程で培われた、複雑な問題の分析力や0から1を作り上げる構築力を活かして社会に貢献していきたいと考えております。</p>
+          <p>これまで大手企業グループ、ベンチャー企業、大学研究室と規模やスタイルの異なる環境での開発経験を有しております。</p>
+          <p>大手企業グループではCAE業務アプリケーションを年に2〜3回、10年以上継続的に開発・保守を行いました。ベンチャー企業では避難シミュレーション開発を提案から設計、実装、報告まで一貫して行いました。</p>
+          <p>得意な開発言語はC++（15年）、Pythonですが、オブジェクト指向プログラミングを体得していますので、未経験の言語でもご相談ください。</p>
+          <p>最近では、React + TypeScriptによるWebアプリケーション開発、iOSアプリのPoC開発をPLとして担当しました。</p>
+        </div>
+        <dl class="profile-highlights">
+          <div><dt>DEGREE</dt><dd>博士（理学）</dd></div>
+          <div><dt>CORE SKILL</dt><dd>分析力・モデル構築力</dd></div>
+          <div><dt>EXPERIENCE</dt><dd>C++ 15年、PM・PL</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="section portfolio" id="portfolio">
+      <div class="section-heading"><p class="section-number">03</p><div><p class="eyebrow">SELECTED WORKS</p><h2>PLAYGROUND</h2></div></div>
+      <div class="work-grid">
+        <a class="work-card" href="https://oharuka27.github.io/cat_fortune/" target="_blank" rel="noopener noreferrer"><div class="card-visual cat-visual" aria-hidden="true"><span>✦</span><span>CAT</span></div><div class="card-meta"><span>01 / FORTUNE</span><span>WEB APP ↗</span></div><h3>猫さま占い</h3></a>
+        <a class="work-card" href="https://todo-app.oharuka27.workers.dev/" target="_blank" rel="noopener noreferrer"><div class="card-visual solo-visual" aria-hidden="true"><span>✓</span><span>SOLO</span></div><div class="card-meta"><span>02 / PRODUCTIVITY</span><span>WEB APP ↗</span></div><h3>1人用 ToDo アプリ</h3></a>
+        <a class="work-card" href="https://team-todo.oharuka27.workers.dev/" target="_blank" rel="noopener noreferrer"><div class="card-visual team-visual" aria-hidden="true"><span>● ● ●</span><span>TEAM</span></div><div class="card-meta"><span>03 / COLLABORATION</span><span>WEB APP ↗</span></div><h3>チーム ToDo アプリ</h3></a>
+      </div>
+    </section>
+    <section class="section history" id="history">
+      <div class="section-heading"><p class="section-number">04</p><div><p class="eyebrow">WORK EXPERIENCE</p><h2>HISTORY</h2></div></div>
+      <div class="history-table-wrap" tabindex="0" aria-label="業務履歴テーブル。横方向にスクロールできます">
+        <table class="history-table">
+          <thead><tr><th scope="col">No.</th><th scope="col">開始</th><th scope="col">終了</th><th scope="col">期間</th><th scope="col">案件名</th><th scope="col">環境・言語等</th><th scope="col">役割・規模</th><th scope="col">担当工程</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>2026/6</td><td>2027/3</td><td>10ヶ月</td><td>一般向けアノテーション用のiOSアプリPoC開発プロジェクト</td><td>macOS・iOS<br>Xcode<br>Swift<br>Python（Django）<br>nginx<br>AWS<br>Git・GitLab<br>TestFlight</td><td>PL<br>メンバー2名<br><small>（うち1名BP）</small></td><td>要件定義、基本設計、PL・PM</td></tr>
+            <tr><td>2</td><td>2026/4</td><td>2026/5</td><td>2ヶ月</td><td>OSSアノテーションツールの改修プロジェクト</td><td>WSL（Ubuntu）<br>Docker<br>VS Code<br>React + TypeScript<br>Python・PyCharm<br>Git・GitLab<br>Jira</td><td>PL<br>メンバー3名<br><small>（うち1名BP）</small></td><td>企画提案、調査分析、要件定義、詳細設計、実装、運用保守、PL・PM</td></tr>
+            <tr><td>3</td><td>2025/10</td><td>2026/3</td><td>6ヶ月</td><td>一般向けアノテーション用のiOSアプリPoC開発プロジェクト</td><td>macOS・iOS<br>Xcode<br>Swift<br>Python（Django）<br>nginx<br>AWS<br>Git・GitLab<br>TestFlight</td><td>PL<br>メンバー4名<br><small>（うち2名BP）</small></td><td>要件定義、基本設計、詳細設計、実装、単体試験、運用保守、PL・PM</td></tr>
+            <tr><td>4</td><td>2025/7</td><td>2025/9</td><td>3ヶ月</td><td>OSSアノテーションツールの改修プロジェクト</td><td>WSL（Ubuntu）<br>Docker<br>VS Code<br>React + TypeScript<br>Git・GitLab<br>Jira<br>BIツール（Grafana）</td><td>PL<br>メンバー3名</td><td>調査分析、要件定義、基本設計、実装、単体試験、運用保守、PL・PM</td></tr>
+            <tr><td>5</td><td>2012/5</td><td>2025/5</td><td>13年1ヶ月</td><td>電磁界解析CAEデスクトップアプリケーション開発</td><td>Windows（メイン）<br>Linux（Red Hat）<br>C++・Python・Qt<br>Subversion<br>Jenkins・Review Board<br>Confluence・Jira<br>Doxygen</td><td>副リーダー7年<br>メンバー6名<br><small>（外国籍メンバー2〜3名）</small></td><td>要件定義、基本設計、詳細設計、実装、単体試験、結合試験</td></tr>
+            <tr><td>6</td><td>2010/4</td><td>2012/4</td><td>2年1ヶ月</td><td>防災・避難シミュレーション等のコンサルティング／データ分析推計のコンサルティング</td><td>Windows<br>C++<br>PostgreSQL<br>Word・Excel</td><td>開発メンバー<br><small>（リーダーの監督のもと実務担当）</small></td><td>要件定義、基本設計、詳細設計、実装、単体試験、結合試験</td></tr>
+            <tr><td>7</td><td>2009/5</td><td>2010/3</td><td>11ヶ月</td><td>次世代ナノ電子素子の物理的理論モデル構築・数値計算</td><td>macOS<br>Mathematica</td><td>開発メンバー<br><small>（リーダー・研究員のもとで実務担当）</small></td><td>調査分析、要件定義、基本設計、詳細設計、実装</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="brand" href="#top">H/O<span>®</span></a><p>© 2026 HARUKA OHARA</p><a href="#top">BACK TO TOP ↑</a></footer><script src="app.js"></script>
+</body>
 </html>
