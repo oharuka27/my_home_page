@@ -10,7 +10,7 @@
   <main>
     <section class="hero" id="top">
       <canvas id="orb" aria-label="ドラッグして動かせる猫のオブジェクト"></canvas><div class="grain" aria-hidden="true"></div>
-      <div class="hero-copy"><p class="eyebrow">SOFTWARE ENGINEER / PORTFOLIO</p><h1>BUILDING<br><em>WITH CARE.</em></h1><p class="lead">使う人のことを考え、丁寧につくる。<br>Webからデスクトップまで、好奇心をかたちにしています。</p><nav class="hero-nav" aria-label="メインナビゲーション"><a href="#skills">SKILLS</a><a href="#profile">PROFILE</a><a href="#portfolio">PLAYGROUND</a><a href="#history">HISTORY</a></nav></div>
+      <div class="hero-copy"><p class="eyebrow">SOFTWARE ENGINEER / PORTFOLIO</p><h1>BUILDING<br><em>WITH CARE.</em></h1><p class="lead">使う人のことを考え、丁寧につくる。<br>Webからデスクトップまで、好奇心をかたちにしています。</p><nav class="hero-nav" aria-label="メインナビゲーション"><a href="#skills">SKILLS</a><a href="#profile">PROFILE</a><a href="#portfolio">PLAYGROUND</a><a href="#history" hidden>HISTORY</a></nav></div>
       <p class="interaction-hint" aria-hidden="true">DRAG THE CAT <span></span> ◌</p><a class="scroll-cue" href="#skills">SCROLL <span>↓</span></a>
     </section>
     <section class="section skills" id="skills">
@@ -22,7 +22,7 @@
             <tr><th scope="row">OS</th><td>Windows、Linux（Ubuntu）、macOS、iOS</td></tr>
             <tr><th scope="row">言語</th><td>C++、Python、TypeScript、Swift</td></tr>
             <tr><th scope="row">DB</th><td>PostgreSQL、D1（Cloudflare）</td></tr>
-            <tr><th scope="row">ツール／その他</th><td>VS Code、PyCharm、Qt Creator、Visual Studio、React、Django（Python）<br>WSL、Docker、Git、SVN、GitHub、GitLab、AWS、Cloudflare、Jira（Atlassian）、CI/CD構築<br>GitHub Copilot、Codex</td></tr>
+            <tr><th scope="row">ツール／その他</th><td>VS Code、PyCharm、Qt Creator、Visual Studio、React、Django（Python）<br>WSL、Docker、Git、SVN、GitHub、GitLab、AWS、Cloudflare、Jira（Atlassian）、CI/CD構築<br>Codex, Claude Code, GitHub Copilot、hugging face, SAM(画像認識モデル)</td></tr>
             <tr><th scope="row">保有資格</th><td>博士号（理学）<small>※筑波大学 数理物質科学研究科 物理学専攻 博士後期課程卒</small><br>基本情報技術者試験<br>Python 3 エンジニア認定試験<br>TOEIC 640</td></tr>
             <tr><th scope="row">工程経験</th><td>調査分析：★／要件定義：○／基本設計：★／詳細設計：★／実装：★／単体試験：★／結合試験：○／運用保守：○／PL・PM：○<small class="experience-note">※★：10年以上　●：5年以上　◎：3年以上　○：3年未満</small></td></tr>
           </tbody>
@@ -56,7 +56,8 @@
         <a class="work-card" href="https://oharuka27.github.io/hourgrass/" target="_blank" rel="noopener noreferrer"><div class="card-visual hourgrass-visual" aria-hidden="true"><span>⌛︎</span><span>PHYSICS</span></div><div class="card-meta"><span>05 / PHYSICS</span><span>WEB APP ↗</span></div><h3>砂でひと息</h3></a>
       </div>
     </section>
-    <section class="section history" id="history">
+    <!-- Historyは非表示。再表示に備えて内容は保持する。 -->
+    <section class="section history" id="history" hidden>
       <div class="section-heading"><p class="section-number">04</p><div><p class="eyebrow">WORK EXPERIENCE</p><h2>HISTORY</h2></div></div>
       <div class="history-table-wrap" tabindex="0" aria-label="業務履歴テーブル。横方向にスクロールできます">
         <table class="history-table">
