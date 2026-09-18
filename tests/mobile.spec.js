@@ -77,3 +77,31 @@ test('skills table becomes readable stacked cards', async ({ page }, testInfo) =
   const engine = testInfo.project.name.includes('WebKit') ? 'webkit' : 'chromium';
   await page.locator('#skills').screenshot({ path: `test-results/iphone-15-${engine}-skills.png` });
 });
+
+test('cat zone captures dragging while the lower hero keeps scrolling', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'Raw touch injection is only available through Chromium CDP.');
+  await page.goto('/');
+
+  const zone = page.locator('.cat-drag-zone');
+  await expect(zone).toBeVisible();
+  await expect(zone).toHaveCSS('touch-action', 'none');
+  const box = await zone.boundingBox();
+
+  const client = await page.context().newCDPSession(page);
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x, y }],
+  });
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: x + 60, y }],
+  });
+
+  await expect(zone).toHaveClass(/is-dragging/);
+  expect(await page.evaluate(() => scrollY)).toBe(0);
+
+  await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect(zone).not.toHaveClass(/is-dragging/);
+});

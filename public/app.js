@@ -1,4 +1,5 @@
 const canvas = document.querySelector('#orb');
+const catDragZone = document.querySelector('.cat-drag-zone');
 const ctx = canvas.getContext('2d');
 let w, h, dpr, t = 0, spin = -0.45, lift = 0, dragging = false, lastX = 0;
 let interaction = null, petStrokes = 0, happyUntil = 0, painUntil = 0, pointerX = innerWidth*.68, pointerY = innerHeight*.38;
@@ -57,17 +58,22 @@ function hitTest(x, y) {
   if(localY > -r*1.35 && localY < -r*.64 && Math.abs(localX-r*.48)<r*.4) return {type:'ear', index:1};
   return null;
 }
-canvas.addEventListener('pointerdown', e=>{ const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; interaction=hitTest(x,y); dragging=true; lastX=x; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener('pointermove', e=>{ const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; pointerX=x; pointerY=y; if(!dragging)return; const dx=x-lastX, dy=y-(interaction?.lastY ?? y); lastX=x;
+function startInteraction(e) { const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; interaction=hitTest(x,y); dragging=true; lastX=x; e.currentTarget.classList.add('is-dragging'); e.currentTarget.setPointerCapture(e.pointerId); }
+function moveInteraction(e) { const rect=canvas.getBoundingClientRect(), x=e.clientX-rect.left, y=e.clientY-rect.top; pointerX=x; pointerY=y; if(!dragging)return; const dx=x-lastX, dy=y-(interaction?.lastY ?? y); lastX=x;
   if(interaction?.type==='ear'){ const ear=ears[interaction.index]; ear.stretch=Math.max(-.35,Math.min(.7,ear.stretch-dy*.008)); ear.bend=Math.max(-.7,Math.min(.7,ear.bend-dx*.012)); if(Math.abs(ear.stretch)>.38||Math.abs(ear.bend)>.45) painUntil=t+.65; interaction.lastY=y; }
   else if(interaction?.type==='pet'){ interaction.distance+=Math.hypot(dx,dy); spin+=dx*.004; }
   else spin+=dx*.012;
-});
+}
 function endInteraction() {
   if(interaction?.type==='pet'&&interaction.distance>=geometry().r*.35){petStrokes++; if(petStrokes>=2) happyUntil=t+3;}
   if(interaction?.type==='ear'){ ears[interaction.index].stretch=0; ears[interaction.index].bend=0; }
   interaction=null; dragging=false;
+  canvas.classList.remove('is-dragging'); catDragZone.classList.remove('is-dragging');
 }
-canvas.addEventListener('pointerup', endInteraction);
-canvas.addEventListener('pointercancel', endInteraction);
+[canvas, catDragZone].forEach(source=>{
+  source.addEventListener('pointerdown', startInteraction);
+  source.addEventListener('pointermove', moveInteraction);
+  source.addEventListener('pointerup', endInteraction);
+  source.addEventListener('pointercancel', endInteraction);
+});
 requestAnimationFrame(frame);
