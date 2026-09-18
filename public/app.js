@@ -76,4 +76,11 @@ function endInteraction() {
   source.addEventListener('pointerup', endInteraction);
   source.addEventListener('pointercancel', endInteraction);
 });
+document.querySelectorAll('.hero-nav a').forEach(link=>{
+  link.addEventListener('pointerdown', e=>{ if(e.pointerType==='touch') link.classList.add('is-tapped'); });
+  const releaseTap=()=>{ link.classList.remove('is-tapped'); link.blur(); };
+  link.addEventListener('pointerup', releaseTap);
+  link.addEventListener('pointercancel', releaseTap);
+  link.addEventListener('click', ()=>setTimeout(releaseTap, 0));
+});
 requestAnimationFrame(frame);

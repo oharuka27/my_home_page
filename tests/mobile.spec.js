@@ -108,17 +108,25 @@ test('cat zone captures dragging while the lower hero keeps scrolling', async ({
 
 test('mobile menu releases its highlight and hides the text arrow', async ({ page }) => {
   await page.goto('/');
-  const menuItem = page.locator('.hero-nav a').first();
+  const menuItems = page.locator('.hero-nav a');
 
-  await menuItem.tap();
+  for (let index = 0; index < await menuItems.count(); index++) {
+    const menuItem = menuItems.nth(index);
+    await menuItem.dispatchEvent('pointerdown', { pointerType: 'touch', pointerId: index + 1 });
+    await expect(menuItem).toHaveClass(/is-tapped/);
+    await expect(menuItem).toHaveCSS('background-color', 'rgb(255, 74, 23)');
 
-  await expect.poll(() => menuItem.evaluate(element => ({
-    backgroundColor: getComputedStyle(element).backgroundColor,
-    transform: getComputedStyle(element).transform,
-    arrowDisplay: getComputedStyle(element, '::before').display,
-  }))).toEqual({
-    backgroundColor: 'rgba(233, 228, 218, 0.72)',
-    transform: 'none',
-    arrowDisplay: 'none',
-  });
+    await menuItem.dispatchEvent('pointerup', { pointerType: 'touch', pointerId: index + 1 });
+    await expect.poll(() => menuItem.evaluate(element => ({
+      tapped: element.classList.contains('is-tapped'),
+      backgroundColor: getComputedStyle(element).backgroundColor,
+      transform: getComputedStyle(element).transform,
+      arrowDisplay: getComputedStyle(element, '::before').display,
+    }))).toEqual({
+      tapped: false,
+      backgroundColor: 'rgba(233, 228, 218, 0.72)',
+      transform: 'none',
+      arrowDisplay: 'none',
+    });
+  }
 });
