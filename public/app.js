@@ -13,8 +13,8 @@ for (let i = 0; i < 900; i++) {
 function resize() { const rect=canvas.getBoundingClientRect(); dpr = Math.min(devicePixelRatio, 2); w = rect.width; h = rect.height; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
 addEventListener('resize', resize); resize();
 function geometry() {
-  const compact = w < 650, r = Math.min(w,h)*(compact ? .285 : .31);
-  return { r, cx:w*(compact ? .57 : .63), cy:h*(compact ? .44 : .49)+Math.sin(t*.9)*5+lift };
+  const compact = w < 650, r = Math.min(w,h)*(compact ? .22 : .31);
+  return { r, cx:w*(compact ? .57 : .63), cy:h*(compact ? .27 : .49)+Math.sin(t*.9)*5+lift };
 }
 function drawEar(x, y, s, direction, ear) {
   const bend = ear.bend * s, stretch = 1 + ear.stretch;
