@@ -105,3 +105,20 @@ test('cat zone captures dragging while the lower hero keeps scrolling', async ({
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect(zone).not.toHaveClass(/is-dragging/);
 });
+
+test('mobile menu releases its highlight and hides the text arrow', async ({ page }) => {
+  await page.goto('/');
+  const menuItem = page.locator('.hero-nav a').first();
+
+  await menuItem.tap();
+
+  await expect.poll(() => menuItem.evaluate(element => ({
+    backgroundColor: getComputedStyle(element).backgroundColor,
+    transform: getComputedStyle(element).transform,
+    arrowDisplay: getComputedStyle(element, '::before').display,
+  }))).toEqual({
+    backgroundColor: 'rgba(233, 228, 218, 0.72)',
+    transform: 'none',
+    arrowDisplay: 'none',
+  });
+});
