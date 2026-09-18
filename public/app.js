@@ -36,9 +36,9 @@ function frame(ms) {
   const breathingY = 1 + breath * .025 * .5 * .75 * 1.5;
   ctx.save(); ctx.translate(cx,cy); ctx.scale(breathingX, .94 * breathingY);
   const glow=ctx.createRadialGradient(-r*.25,-r*.35,r*.05,0,0,r); glow.addColorStop(0,'#fff1ce'); glow.addColorStop(.18,'#f9b56c'); glow.addColorStop(.64,'#f05a24'); glow.addColorStop(1,'#751812'); ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
-  const a=spin+t*.12, ca=Math.cos(a), sa=Math.sin(a); const sorted=[];
+  const a=spin+t*.12, ca=Math.cos(a), sa=Math.sin(a), dotSizeScale=w<650 ? .52 : 1; const sorted=[];
   dots.forEach(p=>{ const x=p.x*ca-p.z*sa, z=p.x*sa+p.z*ca; sorted.push({x,y:p.y,z,size:p.size,seed:p.seed}); }); sorted.sort((a,b)=>a.z-b.z);
-  for (const p of sorted) { const scale=.72+p.z*.28, x=p.x*r*scale, y=p.y*r*scale; const light=Math.max(0, p.z*.55 - p.y*.2 + .42); ctx.fillStyle=`rgba(255,${Math.round(75+150*light)},${Math.round(32+100*light)},${.22+light*.65})`; ctx.beginPath(); ctx.arc(x,y,p.size*(.5+scale),0,7); ctx.fill(); }
+  for (const p of sorted) { const scale=.72+p.z*.28, x=p.x*r*scale, y=p.y*r*scale; const light=Math.max(0, p.z*.55 - p.y*.2 + .42); ctx.fillStyle=`rgba(255,${Math.round(75+150*light)},${Math.round(32+100*light)},${.22+light*.65})`; ctx.beginPath(); ctx.arc(x,y,p.size*(.5+scale)*dotSizeScale,0,7); ctx.fill(); }
   const earSize = r*.28*1.2;
   drawEar(-r*.48,-r*.86,earSize,-.32,ears[0]); drawEar(r*.48,-r*.86,earSize,.32,ears[1]);
   const happy = t < happyUntil, hurt = t < painUntil;
