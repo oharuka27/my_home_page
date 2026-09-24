@@ -1,7 +1,8 @@
 const canvas = document.querySelector('#orb');
 const catDragZone = document.querySelector('.cat-drag-zone');
 const ctx = canvas.getContext('2d');
-let w, h, dpr, t = 0, lift = 0, dragging = false, lastX = 0, lastY = 0, lastFrameMs = 0;
+let w, h, dpr, t = 0, lift = 0, dragging = false, lastX = 0, lastY = 0, lastFrameMs = 0, lastRenderedMs = 0;
+let canvasVisible = true, animationRunning = false;
 let facePullX = 0, facePullY = 0, faceVelocityX = 0, faceVelocityY = 0;
 let particleAngle = -.45;
 let interaction = null, painUntil = 0, pointerX = innerWidth*.68, pointerY = innerHeight*.38;
@@ -11,11 +12,11 @@ const ears = Array.from({length:2},()=>({stretch:0, bend:0, stretchVelocity:0, b
 const dots = [];
 
 // Fibonacci sphere: deliberately abstract rather than a copy of the reference object.
-for (let i = 0; i < 900; i++) {
-  const u = i / 899, phi = Math.acos(1 - 2 * u), theta = Math.PI * (1 + Math.sqrt(5)) * i;
+for (let i = 0; i < 360; i++) {
+  const u = i / 359, phi = Math.acos(1 - 2 * u), theta = Math.PI * (1 + Math.sqrt(5)) * i;
   dots.push({ x:Math.cos(theta)*Math.sin(phi), y:Math.sin(theta)*Math.sin(phi), z:Math.cos(phi), size:.35 + Math.random()*1.6, seed:Math.random()*10 });
 }
-function resize() { const rect=canvas.getBoundingClientRect(); dpr = Math.min(devicePixelRatio, 2); w = rect.width; h = rect.height; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+function resize() { const rect=canvas.getBoundingClientRect(); dpr = Math.min(devicePixelRatio, 1.5); w = rect.width; h = rect.height; pointerX=w*(w<650 ? .62 : .68); pointerY=h*(w<650 ? .37 : .38); canvas.width=w*dpr; canvas.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
 addEventListener('resize', resize); resize();
 function geometry() {
   const compact = w < 650, r = Math.min(w,h)*(compact ? .22 : .31);
@@ -155,7 +156,27 @@ function drawJoySparkles(cx, cy, r, expression) {
     ctx.fill();ctx.restore();
   });
 }
+function startAnimation() {
+  if (animationRunning || document.hidden || !canvasVisible) return;
+  lastFrameMs = 0;
+  lastRenderedMs = 0;
+  animationRunning = true;
+  requestAnimationFrame(frame);
+}
+const visibilityObserver = new IntersectionObserver(entries => {
+  canvasVisible = entries[0].isIntersecting;
+  if (canvasVisible) startAnimation();
+});
+visibilityObserver.observe(canvas);
+document.addEventListener('visibilitychange', startAnimation);
 function frame(ms) {
+  if (document.hidden || !canvasVisible) {
+    animationRunning = false;
+    return;
+  }
+  requestAnimationFrame(frame);
+  if (ms - lastRenderedMs < 1000 / 35) return;
+  lastRenderedMs = ms;
   const dt = Math.min((ms - (lastFrameMs || ms)) * .001, .033);
   lastFrameMs = ms; t = ms*.001;
   ears.forEach((ear,index)=>{
@@ -227,7 +248,6 @@ function frame(ms) {
   ctx.restore();
   drawJoySparkles(cx,cy,r,expression);
   fish.forEach(drawFish);
-  requestAnimationFrame(frame);
 }
 function pointerPosition(e) {
   const rect=canvas.getBoundingClientRect();
@@ -300,4 +320,4 @@ document.querySelectorAll('.hero-nav a').forEach(link=>{
   link.addEventListener('pointercancel', releaseTap);
   link.addEventListener('click', ()=>setTimeout(releaseTap, 0));
 });
-requestAnimationFrame(frame);
+startAnimation();
