@@ -20,9 +20,17 @@ function geometry() {
 function drawEar(x, y, s, direction, ear) {
   const bend = ear.bend * s, stretch = 1 + ear.stretch;
   ctx.save(); ctx.translate(x, y + s*.5); ctx.transform(1, 0, bend / s, 1, 0, 0); ctx.scale(1, stretch);
-  ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0); ctx.lineTo(direction*s*.55, -s*1.5); ctx.closePath();
+  const tipX = direction*s*.55;
+  ctx.beginPath(); ctx.moveTo(-s, 0);
+  ctx.bezierCurveTo(-s*.9,-s*.38,tipX-s*.22,-s*1.42,tipX,-s*1.5);
+  ctx.bezierCurveTo(tipX+s*.22,-s*1.42,s*.9,-s*.38,s,0);
+  ctx.quadraticCurveTo(0,s*.16,-s,0); ctx.closePath();
   const g=ctx.createLinearGradient(-s,-s,s,s); g.addColorStop(0,'#ffb06b'); g.addColorStop(.32,'#f2652a'); g.addColorStop(.7,'#c5321c'); g.addColorStop(1,'#651510'); ctx.fillStyle=g; ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-s*.58,0); ctx.lineTo(s*.55,0); ctx.lineTo(direction*s*.53,-s*1.17); ctx.closePath();
+  const innerTipX = direction*s*.5;
+  ctx.beginPath(); ctx.moveTo(-s*.58,-s*.04);
+  ctx.bezierCurveTo(-s*.48,-s*.3,innerTipX-s*.15,-s*1.08,innerTipX,-s*1.17);
+  ctx.bezierCurveTo(innerTipX+s*.15,-s*1.08,s*.48,-s*.3,s*.55,-s*.04);
+  ctx.quadraticCurveTo(0,s*.06,-s*.58,-s*.04); ctx.closePath();
   const inner=ctx.createLinearGradient(0,-s,0,s); inner.addColorStop(0,'#70201c'); inner.addColorStop(1,'#ee7040'); ctx.fillStyle=inner; ctx.fill();
   ctx.strokeStyle='rgba(255,244,221,.6)'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
 }
