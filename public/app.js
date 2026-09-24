@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 let w, h, dpr, t = 0, lift = 0, dragging = false, lastX = 0, lastY = 0, lastFrameMs = 0;
 let facePullX = 0, facePullY = 0, faceVelocityX = 0, faceVelocityY = 0;
 let interaction = null, painUntil = 0, pointerX = innerWidth*.68, pointerY = innerHeight*.38;
-const ears = [{ stretch:0, bend:0 }, { stretch:0, bend:0 }];
+const ears = Array.from({length:2},()=>({stretch:0, bend:0, stretchVelocity:0, bendVelocity:0}));
 const dots = [];
 
 // Fibonacci sphere: deliberately abstract rather than a copy of the reference object.
@@ -20,17 +20,19 @@ function geometry() {
 }
 function drawEar(x, y, s, direction, ear) {
   const bend = ear.bend * s, stretch = 1 + ear.stretch;
+  // Gently narrow the sides under tension, while keeping the root anchored.
+  const waist=.12*Math.tanh(Math.hypot(Math.max(0,ear.stretch),ear.bend*.5)*2);
   ctx.save(); ctx.translate(x, y + s*.5); ctx.transform(1, 0, bend / s, 1, 0, 0); ctx.scale(1, stretch);
   const tipX = direction*s*.55;
   ctx.beginPath(); ctx.moveTo(-s, 0);
-  ctx.bezierCurveTo(-s*.9,-s*.38,tipX-s*.22,-s*1.42,tipX,-s*1.5);
-  ctx.bezierCurveTo(tipX+s*.22,-s*1.42,s*.9,-s*.38,s,0);
+  ctx.bezierCurveTo(-s*(.9-waist),-s*.38,tipX-s*(.22-waist*.25),-s*1.42,tipX,-s*1.5);
+  ctx.bezierCurveTo(tipX+s*(.22-waist*.25),-s*1.42,s*(.9-waist),-s*.38,s,0);
   ctx.quadraticCurveTo(0,s*.16,-s,0); ctx.closePath();
   const g=ctx.createLinearGradient(-s,-s,s,s); g.addColorStop(0,'#ffb06b'); g.addColorStop(.32,'#f2652a'); g.addColorStop(.7,'#c5321c'); g.addColorStop(1,'#651510'); ctx.fillStyle=g; ctx.fill();
   const innerTipX = direction*s*.5;
   ctx.beginPath(); ctx.moveTo(-s*.58,-s*.04);
-  ctx.bezierCurveTo(-s*.48,-s*.3,innerTipX-s*.15,-s*1.08,innerTipX,-s*1.17);
-  ctx.bezierCurveTo(innerTipX+s*.15,-s*1.08,s*.48,-s*.3,s*.55,-s*.04);
+  ctx.bezierCurveTo(-s*(.48-waist*.6),-s*.3,innerTipX-s*(.15-waist*.15),-s*1.08,innerTipX,-s*1.17);
+  ctx.bezierCurveTo(innerTipX+s*(.15-waist*.15),-s*1.08,s*(.48-waist*.6),-s*.3,s*.55,-s*.04);
   ctx.quadraticCurveTo(0,s*.06,-s*.58,-s*.04); ctx.closePath();
   const inner=ctx.createLinearGradient(0,-s,0,s); inner.addColorStop(0,'#70201c'); inner.addColorStop(1,'#ee7040'); ctx.fillStyle=inner; ctx.fill();
   ctx.strokeStyle='rgba(255,244,221,.6)'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
@@ -56,6 +58,17 @@ function traceSlimeFace(r, pull) {
 function frame(ms) {
   const dt = Math.min((ms - (lastFrameMs || ms)) * .001, .033);
   lastFrameMs = ms; t = ms*.001;
+  ears.forEach((ear,index)=>{
+    if(interaction?.type==='ear' && interaction.index===index) return;
+    // A more damped spring than the face gives the ears a small, soft bounce.
+    ear.stretchVelocity+=(-85*ear.stretch-11*ear.stretchVelocity)*dt;
+    ear.bendVelocity+=(-85*ear.bend-11*ear.bendVelocity)*dt;
+    ear.stretch+=ear.stretchVelocity*dt;
+    ear.bend+=ear.bendVelocity*dt;
+    if(Math.hypot(ear.stretch,ear.bend)<.001 && Math.hypot(ear.stretchVelocity,ear.bendVelocity)<.01){
+      ear.stretch=0; ear.bend=0; ear.stretchVelocity=0; ear.bendVelocity=0;
+    }
+  });
   if (interaction?.type !== 'face' && (facePullX || facePullY || faceVelocityX || faceVelocityY)) {
     const spring = 52, damping = 6;
     faceVelocityX += (-spring*facePullX - damping*faceVelocityX)*dt;
@@ -118,6 +131,10 @@ function startInteraction(e) {
   const {x,y}=pointerPosition(e);
   interaction=hitTest(x,y); dragging=Boolean(interaction); lastX=x; lastY=y;
   if(!dragging) return;
+  if(interaction.type==='ear'){
+    const ear=ears[interaction.index];
+    ear.stretchVelocity=0; ear.bendVelocity=0;
+  }
   faceVelocityX=0; faceVelocityY=0;
   e.currentTarget.classList.add('is-dragging');
   e.currentTarget.setPointerCapture(e.pointerId);
@@ -141,7 +158,6 @@ function moveInteraction(e) {
   }
 }
 function endInteraction() {
-  if(interaction?.type==='ear'){ ears[interaction.index].stretch=0; ears[interaction.index].bend=0; }
   interaction=null; dragging=false;
   canvas.classList.remove('is-dragging'); catDragZone.classList.remove('is-dragging');
 }
