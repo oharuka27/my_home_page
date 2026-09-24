@@ -3,6 +3,7 @@ const catDragZone = document.querySelector('.cat-drag-zone');
 const ctx = canvas.getContext('2d');
 let w, h, dpr, t = 0, lift = 0, dragging = false, lastX = 0, lastY = 0, lastFrameMs = 0;
 let facePullX = 0, facePullY = 0, faceVelocityX = 0, faceVelocityY = 0;
+let particleAngle = -.45;
 let interaction = null, painUntil = 0, pointerX = innerWidth*.68, pointerY = innerHeight*.38;
 const ears = Array.from({length:2},()=>({stretch:0, bend:0, stretchVelocity:0, bendVelocity:0}));
 const dots = [];
@@ -78,6 +79,10 @@ function frame(ms) {
       facePullX=0; facePullY=0; faceVelocityX=0; faceVelocityY=0;
     }
   }
+  const deforming=interaction!==null || facePullX!==0 || facePullY!==0 || faceVelocityX!==0 || faceVelocityY!==0
+    || ears.some(ear=>ear.stretch!==0 || ear.bend!==0 || ear.stretchVelocity!==0 || ear.bendVelocity!==0);
+  // Accumulate only idle time so resuming never jumps ahead in the rotation.
+  if(!deforming) particleAngle=(particleAngle+dt*.12)%(Math.PI*2);
   ctx.clearRect(0,0,w,h);
   const {r, cx, cy} = geometry();
   // soft ground and colored atmospheric halo
@@ -100,7 +105,7 @@ function frame(ms) {
   const glow=ctx.createRadialGradient(-r*.25,-r*.35,r*.05,0,0,r); glow.addColorStop(0,'#fff1ce'); glow.addColorStop(.18,'#f9b56c'); glow.addColorStop(.64,'#f05a24'); glow.addColorStop(1,'#751812');
   ctx.fillStyle=glow; ctx.fill(); ctx.restore();
   ctx.clip();
-  const a=-.45, ca=Math.cos(a), sa=Math.sin(a), dotSizeScale=w<650 ? .52 : 1; const sorted=[];
+  const ca=Math.cos(particleAngle), sa=Math.sin(particleAngle), dotSizeScale=w<650 ? .52 : 1; const sorted=[];
   dots.forEach(p=>{ const x=p.x*ca-p.z*sa, z=p.x*sa+p.z*ca; sorted.push({x,y:p.y,z,size:p.size,seed:p.seed}); }); sorted.sort((a,b)=>a.z-b.z);
   for (const p of sorted) { const scale=.72+p.z*.28, x=p.x*r*scale, y=p.y*r*scale; const light=Math.max(0, p.z*.55 - p.y*.2 + .42); ctx.fillStyle=`rgba(255,${Math.round(75+150*light)},${Math.round(32+100*light)},${.22+light*.65})`; ctx.beginPath(); ctx.arc(x,y,p.size*(.5+scale)*dotSizeScale,0,7); ctx.fill(); }
   ctx.restore();
