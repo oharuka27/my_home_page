@@ -1,6 +1,9 @@
 {
+  "name": "my-home-page",
+  "private": true,
   "scripts": {
-    "test:mobile": "playwright test"
+    "test": "playwright test",
+    "test:mobile": "playwright test tests/mobile.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0"

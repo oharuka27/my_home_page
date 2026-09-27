@@ -50,29 +50,25 @@ test('full-screen canvas allows a native vertical touch gesture', async ({ page,
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
 });
 
-test('skills table becomes readable stacked cards', async ({ page }, testInfo) => {
+test('skills rows stack into a single readable column', async ({ page }, testInfo) => {
   await page.goto('/#skills');
 
   const layout = await page.evaluate(() => {
-    const wrap = document.querySelector('.skill-table-wrap');
-    const table = document.querySelector('.skill-table');
-    const head = table.querySelector('thead');
-    const body = table.querySelector('tbody');
-    const firstRow = body.querySelector('tr');
+    const list = document.querySelector('.skill-list');
+    const rows = [...list.querySelectorAll('.skill-row')];
     return {
-      fitsWithoutHorizontalScroll: wrap.scrollWidth <= wrap.clientWidth,
-      tableMinWidth: getComputedStyle(table).minWidth,
-      headDisplay: getComputedStyle(head).display,
-      bodyDisplay: getComputedStyle(body).display,
-      rowDisplay: getComputedStyle(firstRow).display,
+      pageFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      listFits: list.scrollWidth <= list.clientWidth,
+      rowColumnCounts: rows.map(row => getComputedStyle(row).gridTemplateColumns.split(' ').length),
+      coffeeDisplay: getComputedStyle(document.querySelector('.skills-art')).display,
     };
   });
 
-  expect(layout.fitsWithoutHorizontalScroll).toBe(true);
-  expect(layout.tableMinWidth).toBe('0px');
-  expect(layout.headDisplay).toBe('none');
-  expect(layout.bodyDisplay).toBe('grid');
-  expect(layout.rowDisplay).toBe('block');
+  expect(layout.pageFits).toBe(true);
+  expect(layout.listFits).toBe(true);
+  expect(layout.rowColumnCounts.length).toBeGreaterThan(0);
+  expect(layout.rowColumnCounts.every(count => count === 1)).toBe(true);
+  expect(layout.coffeeDisplay).toBe('none');
 
   const engine = testInfo.project.name.includes('WebKit') ? 'webkit' : 'chromium';
   await page.locator('#skills').screenshot({ path: `test-results/iphone-15-${engine}-skills.png` });
