@@ -407,6 +407,10 @@ h1 em {
   width: 1.3em;
   height: 1.3em;
 }
+.news-visual {
+  background: #b4d9aa;
+  color: #1d3126;
+}
 .solo-visual {
   background: #d9ff43;
   color: #181718;
