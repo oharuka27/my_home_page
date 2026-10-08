@@ -8,12 +8,12 @@
 | --- | --- |
 | [猫と学ぶ](https://cat-fortune.mitenecolab.com/) | 猫と一緒に名言に触れるアプリ。 |
 | [ニュースアプリ](https://news-app.mitenecolab.com/) | ニュースを閲覧するアプリ。 |
+| [MARKET ヒートマップ](https://heatmap.mitenecolab.com/) | 仮想通貨の時価総額と騰落率をヒートマップで表示するアプリ。 |
 | [波を重ねる](https://ripples.mitenecolab.com/) | 波を重ねて変化を楽しむシミュレーション。 |
 | [砂でひと息](https://hourglass.mitenecolab.com/) | 砂時計の動きを眺められる物理表現のアプリ。 |
 | [スマホQRアンケート](https://web-survey.mitenecolab.com/) | QR コードを使ってスマートフォンから回答するアンケート。 |
 | [ToDoアプリ](https://todo.mitenecolab.com/) | 個人のタスクを管理するアプリ。 |
 | [チームタスク](https://team-todo.mitenecolab.com/) | チームのタスクを管理するアプリ。 |
-| [AI画像切り出し](https://light-sam.mitenecolab.com/) | AI モデルを使って画像内の対象を切り出すアプリ。 |
 | [寄り道検索](https://yorimichi.mitenecolab.com/) | 検索から思いがけない発見につなげるアプリ。 |
 
 ## 実装のポイント

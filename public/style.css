@@ -430,10 +430,6 @@ h1 em {
 .hourglass-visual span:last-child {
   font-size: clamp(24px, 3.4vw, 48px);
 }
-.ai-visual {
-  background: #ff8fb1;
-  color: #211714;
-}
 .search-visual {
   background: #b97852;
   color: #211714;
@@ -446,6 +442,13 @@ h1 em {
   color: #14233b;
 }
 .ripple-visual span:last-child {
+  font-size: clamp(24px, 3.4vw, 48px);
+}
+.heatmap-visual {
+  background: #1f8a5b;
+  color: #f2eee5;
+}
+.heatmap-visual span:last-child {
   font-size: clamp(24px, 3.4vw, 48px);
 }
 .card-meta {
