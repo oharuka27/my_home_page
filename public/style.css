@@ -445,8 +445,8 @@ h1 em {
   font-size: clamp(24px, 3.4vw, 48px);
 }
 .heatmap-visual {
-  background: #1f8a5b;
-  color: #f2eee5;
+  background: #ff8fb1;
+  color: #211714;
 }
 .heatmap-visual span:last-child {
   font-size: clamp(24px, 3.4vw, 48px);
